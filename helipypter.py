@@ -17,20 +17,7 @@ import matplotlib.ticker as ticker
 from skaero.atmosphere import coesa
 from skaero import __version__ as skver
 
-# Logging setup
-logging.basicConfig(
-    level=logging.INFO,
-    format=' %(asctime)s -  %(levelname)s -  %(message)s'
-)
-# Spit out the runtime info for reproducibility
-logging.info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
-logging.info('Python version: {}'.format(sys.version))
-logging.info('Author: Benjamin Crews')
-logging.info('Numpy version: {}'.format(np.version.version))
-logging.info('Pandas version: {}'.format(pd.__version__))
-logging.info('Matplotlib version: {}'.format(pltver))
-logging.info('SciKit-Aero version: {}'.format(skver))
-logging.info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
+
 
 ### Classes
 
@@ -299,7 +286,7 @@ class Helicopter():
                   self.pwr_acc*(self.eta_xsmn_co)
         SHP_unins = SHP_ins/self.eta_inst   # [hp]
         
-        sfc = self.bsfc(SHP_unins/self.pwr_lim)
+        sfc = self.bsfc(100*SHP_unins/self.pwr_lim)
         
         # Warn the user if limits have been exceeded.
         if SHP_unins > self.pwr_lim:
@@ -575,3 +562,22 @@ def roc(data):
     ax.grid(b=True, which='minor', linestyle=':', alpha=0.3)
     
     return fig, ax
+
+
+
+
+    if __name__ == "__main__":
+        # Logging setup
+        logging.basicConfig(
+            level=logging.INFO,
+            format=' %(asctime)s -  %(levelname)s -  %(message)s'
+        )
+        # Spit out the runtime info for reproducibility
+        logging.info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
+        logging.info('Python version: {}'.format(sys.version))
+        logging.info('Author: Benjamin Crews')
+        logging.info('Numpy version: {}'.format(np.version.version))
+        logging.info('Pandas version: {}'.format(pd.__version__))
+        logging.info('Matplotlib version: {}'.format(pltver))
+        logging.info('SciKit-Aero version: {}'.format(skver))
+        logging.info('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
