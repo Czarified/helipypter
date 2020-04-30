@@ -451,7 +451,7 @@ class Environment():
     All atmospheric properties are attributes of this class.
     
     Depends on sk-aero.coesa module.
-    Note that only input is the altitude, in feet. All units are automatically
+    Note that only input is the altitude, in feet. All units returned are automatically
     converted from metric to Imperial.
     '''
     alt: float = field(default=0, metadata={'units':'ft'})
