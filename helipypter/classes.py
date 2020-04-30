@@ -27,11 +27,10 @@ from skaero import __version__ as skver
 @dataclass
 class Helicopter():
     '''
-    This class represents a helicopter with typical design features.
-    These features are:
-       Single Main Rotor,
-       Single Tail Rotor,
-       No shared lift or forward thrusters
+    This class represents a helicopter with typical design features. These features are:
+       - Single Main Rotor,
+       - Single Tail Rotor,
+       - No shared lift or forward thrusters
        
     The basic Helicopter class has attributes and properties (according to Python definitions).
     Defaults are set for all values, so be careful with results before checking that all your
@@ -156,8 +155,13 @@ class Helicopter():
     
     def bsfc(self, pwr) -> float:
         '''
-        This method returns the bsfc based on a certain power setting.
-        Returned value is in units of lbs/(hp*hr)
+        This method uses the normalized bsfc curve (engine specific).
+
+        :cvar pwr: Percent power (eg 47%)
+        :vartype pwr: float
+
+        :returns: Brake specific fuel consumption (lbs/(hp*hr))
+        :rtype: float
         '''
         sfc = self.bsfc_0 + self.bsfc_1*pwr + self.bsfc_2*pwr**2 + self.bsfc_3*pwr**3 \
              + self.bsfc_4*pwr**4 + self.bsfc_5*pwr**5
@@ -207,28 +211,34 @@ class Helicopter():
             ) -> list:
         '''
         This method calculates Hover Out of Ground Effect performance.
-        
-        Inputs:
-            atm is an Environment class object, which provides altitude and temperature.
-            delta_1 is the second term in the 3-part drag equation (default to -0.0216 based on literature)
-            delta_2 is the third term in the 3-part drag equation (default to 0.4 based on literature)
-            k_i is the "efficiency factor" which includes losses for non-uniform inflow, and non-ideal twist.
-            Vroc is the vertical rate of climb, in ft/min.
+
+        :cvar atm: An Environment class object, which provides altitude and temperature.
+        :vartype atm: class
+        :cvar delta_1: The second term in the 3-part drag equation (default to -0.0216 based on literature)
+        :vartype delta_1: float
+        :cvar delta_2: The third term in the 3-part drag equation (default to 0.4 based on literature)
+        :vartype delta_2: float
+        :cvar k_i: The "efficiency factor" which includes losses for non-uniform inflow, and non-ideal twist.
+        :vartype k_i: float
+        :cvar Vroc: The vertical rate of climb, in ft/min.
+        :vartype Vroc: float
             
-        Returns a list of metrics.
-                  a = 3D lift coefficient [cl/rad]
-            delta_0 = corrected, compressible drag coefficient (1st term in 3-term drag equation)
-                 Ct = coefficient of thrust
-               Cq_i = coefficient of torque, induced velocity contribution
-               Cq_v = coefficient of torque, vroc contribution
-               Cq_0 = coefficient of torque, 1st term drag
-               Cq_1 = coefficient of torque, 2nd term drag
-               Cq_2 = coefficient of torque, 3rd term drag
-                  Q = Main Rotor Torque
-               P_MR = Main Rotor required Power
-               P_TR = Tail Rotor required Power
-            SHP_ins = Total shaft horsepower of the installed engine
-          SHP_unins = Total shaft horsepower of an uninstalled engine (spec)
+        :returns: a, delta_0, Ct, Cq_i, Cq_v, Cq_0, Cq_1, Cq_2, Q, P_MR, P_TR, SHP_ins, SHP_unins
+        :rtype: list(float, float, float, float, float, float, float, float, float, float, float, float, float)
+        
+        :a: 3D lift coefficient [cl/rad]
+        :delta_0: corrected, compressible drag coefficient (1st term in 3-term drag equation)
+        :Ct: coefficient of thrust
+        :Cq_i: coefficient of torque, induced velocity contribution
+        :Cq_v: coefficient of torque, vroc contribution
+        :Cq_0: coefficient of torque, 1st term drag
+        :Cq_1: coefficient of torque, 2nd term drag
+        :Cq_2: coefficient of torque, 3rd term drag
+        :Q: Main Rotor Torque
+        :P_MR: Main Rotor required Power
+        :P_TR: Tail Rotor required Power
+        :SHP_ins: Total shaft horsepower of the installed engine
+        :SHP_unins: Total shaft horsepower of an uninstalled engine (spec)
         '''
         # If thrust is not specified (default),
         # Set it to weight plus download

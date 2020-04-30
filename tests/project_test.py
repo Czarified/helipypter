@@ -2,7 +2,7 @@
 from collections import namedtuple
 import logging
 import numpy as np
-import helipypter as helipy
+from helipypter.classes import *
 
 # Logging setup
 logging.basicConfig(
@@ -12,7 +12,7 @@ logging.basicConfig(
 
 
 ## Build the Project Helicopter
-heli = helipy.Helicopter(name='Project Helicopter Spec',
+heli = Helicopter(name='Project Helicopter Spec',
                           MR_dia = 35,
                             MR_b = 4,
                           MR_ce = 10.4,
@@ -37,7 +37,7 @@ print(heli)
 
 
 ## What is the basic hover performance?
-atm = helipy.Environment(0)
+atm = Environment(0)
 print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 print('{:^45}'.format('Results - HOGE'))
 print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
@@ -61,11 +61,11 @@ data = heli.forward_flight(atm, speeds)
 
 
 ## Plot stuff
-fig, ax = helipy.specific_range(data)
+fig, ax = specific_range(data)
 fig.savefig('Specific_Range.png')
-fig, ax = helipy.speed_power_polar(data)
+fig, ax = speed_power_polar(data)
 fig.savefig('Speed_Power_Polar.png')
-fig, ax = helipy.roc(data)
+fig, ax = roc(data)
 fig.savefig('Rate_of_Climb.png')
 
 
@@ -114,7 +114,7 @@ for point in mission:
     elif point.maneuver == 'hover':
         # Actually calculate the fuel cost for
         # hovering at an exact weight and altitude
-        data = heli.HOGE(helipy.Environment(point.altitude))
+        data = heli.HOGE(Environment(point.altitude))
         fuel = data['sfc']*data['SHP_unins']*point.duration/60
         heli.burn(fuel)
         logging.info(f'Hovered for {point.duration}[mins], burning {fuel:.2f}[lbs] of fuel.')
@@ -122,7 +122,7 @@ for point in mission:
         logging.info('')
     
     elif point.maneuver == 'loiter':
-        data = heli.forward_flight(helipy.Environment(point.altitude), point.speed)
+        data = heli.forward_flight(Environment(point.altitude), point.speed)
         fuel = data.SHP_uninst[0]*data.bsfc[0]/60 * point.duration
         heli.burn(fuel)
         logging.info(f'Loitered at {point.speed}[kts] for {point.duration}[mins].')
@@ -152,7 +152,7 @@ for point in mission:
         mission_range += 120*point.duration/60   # 120 kts has more ROC than 1000 TODO: Calculate this.
     
     elif point.maneuver == 'flight':
-        data = heli.forward_flight(helipy.Environment(point.altitude), point.speed)
+        data = heli.forward_flight(Environment(point.altitude), point.speed)
         fuel = point.duration/data.SR[0]
         heli.burn(fuel)
         logging.info(f'Forward flight for {point.duration}[nm] @ {point.speed}[kts].')
@@ -164,7 +164,7 @@ for point in mission:
     elif point.maneuver == 'climb':
         # Represents a hover climb/descent NOT @ MCP
         # There's no range credit for a "climb" maneuver instead of an "MCP" maneuver.
-        data = heli.HOGE(helipy.Environment(point.altitude), Vroc=point.speed)
+        data = heli.HOGE(Environment(point.altitude), Vroc=point.speed)
         fuel = data['sfc']*data['SHP_unins']*point.duration/60
         heli.burn(fuel)
         logging.info(f'Climb for {point.duration}[min] @ {point.speed}[ft/min]')
