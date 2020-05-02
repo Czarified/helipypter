@@ -2,7 +2,8 @@
 from collections import namedtuple
 import logging
 import numpy as np
-from helipypter.classes import *
+import helipypter.vehicles as vh
+import helipypter.funcs as func
 
 # Logging setup
 logging.basicConfig(
@@ -12,32 +13,32 @@ logging.basicConfig(
 
 
 ## Build the Project Helicopter
-heli = Helicopter(name='Project Helicopter Spec',
-                          MR_dia = 35,
-                            MR_b = 4,
-                          MR_ce = 10.4,
-                        MR_Omega = 43.2,
-                          MR_cd0 = 0.0080,
-                          TR_dia = 5.42,
-                            TR_b = 4,
-                          TR_ce = 7,
-                        TR_Omega = 239.85,
-                          TR_cd0 = 0.015,
-                        GW_empty = 2853,
-                        GW_fuel = 869,
-                      GW_payload = 1278,
-                        download = 0.03,
-                              fe = 12.9,
-                          l_tail = 21.21,
-                            S_vt = 20.92,
-                          cl_vt = 0.22,
-                          AR_vt = 3
+heli = vh.Helicopter(name='Project Helicopter Spec',
+                  MR_dia = 35,
+                    MR_b = 4,
+                   MR_ce = 10.4,
+                MR_Omega = 43.2,
+                  MR_cd0 = 0.0080,
+                  TR_dia = 5.42,
+                    TR_b = 4,
+                   TR_ce = 7,
+                TR_Omega = 239.85,
+                  TR_cd0 = 0.015,
+                GW_empty = 2853,
+                 GW_fuel = 869,
+              GW_payload = 1278,
+                download = 0.03,
+                      fe = 12.9,
+                  l_tail = 21.21,
+                    S_vt = 20.92,
+                   cl_vt = 0.22,
+                   AR_vt = 3
                         )
 print(heli)
 
 
 ## What is the basic hover performance?
-atm = Environment(0)
+atm = vh.Environment(0)
 print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 print('{:^45}'.format('Results - HOGE'))
 print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
@@ -53,19 +54,24 @@ for k,v in heli.HIGE(atm).items():
     print('{:>17}:  {:>7.4}'.format(k, v))
 
 
+## Forward flight performance over the speed sweep
 speeds = list(np.linspace(20, 150, num=28))
 data = heli.forward_flight(atm, speeds)
+
+## Uncomment this section to print all the data to console
+## It's just a dataframe, so it can be printed, stored,
+## saved as text or even as a workbook.
 
 # with pd.option_context('display.max_columns', 100):
 #     print(data.set_index('Airspeed'))
 
 
 ## Plot stuff
-fig, ax = specific_range(data)
+fig, ax = func.specific_range(data)
 fig.savefig('Specific_Range.png')
-fig, ax = speed_power_polar(data)
+fig, ax = func.speed_power_polar(data)
 fig.savefig('Speed_Power_Polar.png')
-fig, ax = roc(data)
+fig, ax = func.roc(data)
 fig.savefig('Rate_of_Climb.png')
 
 
@@ -114,7 +120,7 @@ for point in mission:
     elif point.maneuver == 'hover':
         # Actually calculate the fuel cost for
         # hovering at an exact weight and altitude
-        data = heli.HOGE(Environment(point.altitude))
+        data = heli.HOGE(vh.Environment(point.altitude))
         fuel = data['sfc']*data['SHP_unins']*point.duration/60
         heli.burn(fuel)
         logging.info(f'Hovered for {point.duration}[mins], burning {fuel:.2f}[lbs] of fuel.')
@@ -122,7 +128,7 @@ for point in mission:
         logging.info('')
     
     elif point.maneuver == 'loiter':
-        data = heli.forward_flight(Environment(point.altitude), point.speed)
+        data = heli.forward_flight(vh.Environment(point.altitude), point.speed)
         fuel = data.SHP_uninst[0]*data.bsfc[0]/60 * point.duration
         heli.burn(fuel)
         logging.info(f'Loitered at {point.speed}[kts] for {point.duration}[mins].')
@@ -152,7 +158,7 @@ for point in mission:
         mission_range += 120*point.duration/60   # 120 kts has more ROC than 1000 TODO: Calculate this.
     
     elif point.maneuver == 'flight':
-        data = heli.forward_flight(Environment(point.altitude), point.speed)
+        data = heli.forward_flight(vh.Environment(point.altitude), point.speed)
         fuel = point.duration/data.SR[0]
         heli.burn(fuel)
         logging.info(f'Forward flight for {point.duration}[nm] @ {point.speed}[kts].')
@@ -164,7 +170,7 @@ for point in mission:
     elif point.maneuver == 'climb':
         # Represents a hover climb/descent NOT @ MCP
         # There's no range credit for a "climb" maneuver instead of an "MCP" maneuver.
-        data = heli.HOGE(Environment(point.altitude), Vroc=point.speed)
+        data = heli.HOGE(vh.Environment(point.altitude), Vroc=point.speed)
         fuel = data['sfc']*data['SHP_unins']*point.duration/60
         heli.burn(fuel)
         logging.info(f'Climb for {point.duration}[min] @ {point.speed}[ft/min]')

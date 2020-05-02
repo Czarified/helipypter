@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="heliPypter-pkg-Czarified",
-    version="0.0.1",
+    name="heliPypter",
+    version="0.0.3",
     author="Benjamin Crews",
     author_email="aceF22@gmail.com",
     description="A package for rotorcraft performance evaluation.",

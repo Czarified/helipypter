@@ -1,4 +1,28 @@
 # helipypter
-Python notebooks related to helicopter aerodynamics.
+heliPypter is a package for rotorcraft performance evaluation. Rotorcraft attributes are provided as input, 
+and performance characteristics such as Engine Horsepower, Specific Range, and Fuel consumption are evaluated.
 
-These notebooks are for academic purposes only. See the license file for restrictions.
+heliPypter has an object oriented philosophy, so different rotorcraft configurations can be built, modified,
+and evaluated quickly, with the same methods. The classes have methods for Hover in and out of Ground Effect
+(HOGE and HIGE), as well as forward flight.
+
+Under the hood, briefly speaking, the code applies Momentum Theory assuming constant chord ideal twist. 
+For forward flight, Gluert's Model is used.
+
+## Installation:
+
+For most sytems, the easiest way to install this package is through the Python Package Index:
+
+```
+$ pip install helipypter
+```
+
+## Documentation
+
+This package has full documentation on [readTheDocs](https://helipypter.readthedocs.io/). The 'API' page is fully documented and shows
+what different members of each class are, and what methods are available. The entire documentation will be
+expanded as the package is developed.
+
+
+Like this package or my work? Feel free to [buy me a coffee](https://www.buymeacoffee.com/czarified).
+All donations will be used as developer fuel!
