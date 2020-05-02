@@ -3,14 +3,14 @@ Python API Documentation
 
 Helicopter Class
 
-.. autoclass:: helipypter.classes.Helicopter
+.. autoclass:: helipypter.vehicles.Helicopter
     :members:
 
-.. autoclass:: helipypter.classes.Environment
+.. autoclass:: helipypter.vehicles.Environment
     :members:
 
-.. autofunction:: helipypter.classes.speed_power_polar
+.. autofunction:: helipypter.funcs.speed_power_polar
 
-.. autofunction:: helipypter.classes.specific_range
+.. autofunction:: helipypter.funcs.specific_range
 
-.. autofunction:: helipypter.classes.roc
+.. autofunction:: helipypter.funcs.roc
