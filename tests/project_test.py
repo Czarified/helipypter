@@ -1,14 +1,20 @@
 
+import os
 from collections import namedtuple
 import logging
 import numpy as np
 import helipypter.vehicles as vh
 import helipypter.funcs as func
 
+# Set the CWD to tests dir
+os.chdir('tests')
+
 # Logging setup
 logging.basicConfig(
     level=logging.INFO,
-    format=' %(asctime)s -  %(levelname)s -  %(message)s'
+    format=' %(asctime)s -  %(levelname)s -  %(message)s',
+    filename='helipypter.out',
+    filemode='w'
 )
 
 
@@ -34,24 +40,26 @@ heli = vh.Helicopter(name='Project Helicopter Spec',
                    cl_vt = 0.22,
                    AR_vt = 3
                         )
-print(heli)
+logging.info('\n' + heli.__str__())
+logging.info('')
 
 
 ## What is the basic hover performance?
 atm = vh.Environment(0)
-print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
-print('{:^45}'.format('Results - HOGE'))
-print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
+logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
+logging.info('{:^45}'.format('Results - HOGE'))
+logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 for k,v in heli.HOGE(atm).items():
-    print('{:>17}:  {:>7.4}'.format(k, v))
+    logging.info('{:>17}:  {:>7.4}'.format(k, v))
     
 
-
-print('\n\n-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
-print('{:^45}'.format('Results - HIGE'))
-print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
+logging.info('')
+logging.info('')
+logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
+logging.info('{:^45}'.format('Results - HIGE'))
+logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 for k,v in heli.HIGE(atm).items():
-    print('{:>17}:  {:>7.4}'.format(k, v))
+    logging.info('{:>17}:  {:>7.4}'.format(k, v))
 
 
 ## Forward flight performance over the speed sweep
@@ -103,6 +111,8 @@ heli.GW_payload = 1278
 heli.GW_fuel = 869
 
 # Mission Loop
+logging.info('')
+logging.info('')
 logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 logging.info('{:^45}'.format('Project Spec Mission'))
 logging.info('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
