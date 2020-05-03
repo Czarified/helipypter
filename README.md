@@ -1,4 +1,7 @@
 # helipypter
+
+![alt text](docs\img\banner.png "helipypter")
+
 heliPypter is a package for rotorcraft performance evaluation. Rotorcraft attributes are provided as input, 
 and performance characteristics such as Engine Horsepower, Specific Range, and Fuel consumption are evaluated.
 

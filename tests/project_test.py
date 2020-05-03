@@ -3,6 +3,8 @@ import os
 from collections import namedtuple
 import logging
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import helipypter.vehicles as vh
 import helipypter.funcs as func
 
@@ -81,6 +83,38 @@ fig, ax = func.speed_power_polar(data)
 fig.savefig('Speed_Power_Polar.png')
 fig, ax = func.roc(data)
 fig.savefig('Rate_of_Climb.png')
+
+
+fig, ax = plt.subplots(figsize=(15,7))
+
+# Add the data and color it
+ax.plot(data.Airspeed, data.SHP_inst_req, color='orange', label='Installed Power', marker='o', markersize='4')
+ax.plot(data.Airspeed, data.SHP_uninst, color='green', label='Uninstalled Power', marker='o', markersize='4')
+ax.legend()
+
+# Axis labels
+ax.set_xlabel('Airspeed, $V$ [kts]', fontsize=12)
+ax.set_ylabel('Engine Power, $P$ [hp]', fontsize=12)
+
+# Set the ticks
+ax.tick_params(which='minor', width=0.75, length=2.5)
+ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax.tick_params(axis='both', which='both', direction='in')
+
+# Set the grid lines
+ax.grid(b=True, which='major', linestyle=':')
+ax.grid(b=True, which='minor', linestyle=':', alpha=0.3)
+
+ax2 = ax.twinx()
+color = 'darkred'
+ax2.set_ylabel('Rate of Climb, $ROC$ [ft/min]', fontsize=12, color=color)
+ax2.plot(data.Airspeed, data.ROC, color=color, label='Rate of Climb', marker='o', markersize='4')
+ax2.tick_params(labelcolor=color)
+ax2.legend()
+
+ax.set_title('Helicopter Speed Sweep', fontsize=18)
+fig.savefig('testfig.png')
 
 
 ## Mission Creation
