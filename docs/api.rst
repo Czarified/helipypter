@@ -23,3 +23,5 @@ Functions
 .. autofunction:: helipypter.funcs.specific_range
 
 .. autofunction:: helipypter.funcs.roc
+
+.. autofunction:: helipypter.funcs.missionSim
