@@ -7,7 +7,7 @@ and evaluated quickly, with the same methods. The classes have methods for Hover
 (HOGE and HIGE), as well as forward flight.
 
 Under the hood, briefly speaking, the code applies Momentum Theory assuming constant chord ideal twist. 
-For forward flight, Gluert's Model is used.
+For forward flight, Glauert's Model is used.
 
 ## Installation:
 
