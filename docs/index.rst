@@ -5,6 +5,12 @@
 
 Welcome to heliPypter's documentation!
 ======================================
+
+.. image:: https://raw.githubusercontent.com/czarified/helipypter/master/docs/img/banner.png
+  :width: 100 %
+  :alt: heliPypter
+  :align: left
+
 heliPypter is a package for rotorcraft performance evaluation. Rotorcraft attributes are provided as input,
 and performance characteristics such as Engine Horsepower, Specific Range, and Fuel consumption are evaluated.
 
