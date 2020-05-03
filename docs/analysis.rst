@@ -58,7 +58,7 @@ to generate this helicopter.
                                   )
 
 .. note::
-    The Main Rotor Blade incompressible minimum drag is a vehicle characteristic. If we could clean up 
+    The Main Rotor Blade incompressible minimum drag, *MR_cd0*, is a vehicle characteristic. If we could clean up 
     this blade drag term, it would logically affect all flight performance, so it's included here in 
     the base definition of the vehicle.
 
@@ -125,6 +125,12 @@ vehicle definition using a simple print function.
     Not shown here are the engine Brake-Specific Fuel Consumption factors. Four factors can be provided, 
     defining a polynomial function to return the bsfc, in *[lbs/(hp*hr)]*. See :class:`helipypter.vehicles.Helicopter` 
     method *Helicopter.bsfc*.
+    
+.. image:: img/bsfc_default.png
+    :width: 100%
+    :alt: bsfc curve
+    :align: left
+
 
 The heli object can now be called to hover, burn fuel, idle, lookup engine power, or fly. However, before we
 can perform any flight maneuvers, atmospheric properties must be supplied. Here, we create an Environment class.
@@ -401,4 +407,79 @@ Results:
     2020-05-02 21:16:08,006 -  INFO -  Total Range = 340.00[nm]
     2020-05-02 21:16:08,006 -  INFO -  -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 
-WIP...
+
+
+
+
+
+
+Technology Factors
+------------------
+
+During design of an air vehicle it can be advantageous to explore the effects of different technology factors, 
+represented as percent reductions, on the performance. Because of heliPypter's object-oriented approach, 
+changing these inputs is relatively straight-forward.
+
+Using our previously-created helicopter as a base, we can update these values one by one, or all at once, 
+it's really up to you.
+
+.. code-block:: python
+
+    import copy
+
+    ## Reduce the empty weight fraction
+    EW_factor = 0.95
+    
+    # Empty weight fraction
+    EW_frac = 0.528
+    # Total Gross Weight
+    GW_total = 5000
+    # Crew Weight
+    w_crew = 200
+    # Trapped Fluids
+    w_fluids = 13
+
+    w_empty = EW_factor*EW_frac*GW_total + w_crew + w_fluids
+    # Our payload is still 6 people @ 213 lbs each
+    w_payload = 6*213
+    w_fuel = GW_total - w_empty - w_payload
+
+    # Copy the previous vehicle, and modify the weights
+    lightweight = copy.copy(doc_chopper)
+    lightweight.GW_empty = w_empty
+    lightweight.GW_fuel = w_fuel
+
+    
+    ## Reduce the MR_cd0
+    ## Reduce the fe
+    
+    cd0_factor = 0.95
+    fe_factor = 0.95
+
+    clean_chopper = copy.copy(doc_chopper)
+    clean_chopper.MR_cd0 = cd0_factor*clean_chopper.MR_cd0
+    clean_chopper.fe = fe_factor*clean_chopper.fe
+
+    
+    
+    ## Reduce the Induced Power Factor
+    ## Increase the fuel efficiency of the engine
+    eng_fac = 0.97
+    
+    # Use this k_i when calling Helicopter.hover()
+    k_i = 1.05
+
+    efficient_chopper = copy.copy(doc_chopper)
+    efficient_chopper.bsfc_0 = eng_fac*efficient_chopper.bsfc_0
+    efficient_chopper.bsfc_1 = eng_fac*efficient_chopper.bsfc_1
+    efficient_chopper.bsfc_2 = eng_fac*efficient_chopper.bsfc_2
+    efficient_chopper.bsfc_3 = eng_fac*efficient_chopper.bsfc_3
+    efficient_chopper.bsfc_4 = eng_fac*efficient_chopper.bsfc_4
+    efficient_chopper.bsfc_5 = eng_fac*efficient_chopper.bsfc_5
+
+
+From here, we can evaluate each verion on the same set of missions, and observe the change 
+in fuel consumption. Changes to the base class aren't limited to the above. A formulaic 
+optimization procedure could be performed on any number of variables for design optimization. 
+Programming this operation is beyond the scope of this analysis, however, and may be included 
+at a later date.
