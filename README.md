@@ -29,3 +29,8 @@ expanded as the package is developed.
 
 Like this package or my work? Feel free to [buy me a coffee](https://www.buymeacoffee.com/czarified).
 All donations will be used as developer fuel!
+
+
+#### Attributions
+Huey Graphic by Jetijones - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=15743299
+Blade Element graphic by Smilesgiles89 - MS Paint, CC BY-SA 3.0, https://en.wikipedia.org/w/index.php?curid=38336902
