@@ -137,5 +137,41 @@ lightweight.GW_empty = w_empty
 lightweight.GW_fuel = w_fuel
 lightweight.GW_payload = w_payload
 out = pd.DataFrame(data=func.missionSim(lightweight, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
-print(f'Lightweight chopper range: {out.dist.sum()}')
-print(f'Lightweight chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
+## Reduce the MR_cd0
+## Reduce the fe
+
+cd0_factor = 0.95
+fe_factor = 0.95
+
+
+clean_chopper = copy.copy(doc_chopper)
+# GW Reset
+w_empty = EW_frac*GW_total + w_crew + w_fluids
+# Our payload is 6 people @ 213 lbs each
+w_payload = 6*213
+w_fuel = GW_total - w_empty - w_payload
+clean_chopper.GW_fuel = w_fuel
+clean_chopper.GW_payload = w_payload
+clean_chopper.MR_cd0 = cd0_factor*clean_chopper.MR_cd0
+clean_chopper.fe = fe_factor*clean_chopper.fe
+out = pd.DataFrame(data=func.missionSim(clean_chopper, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+print(f'Clean chopper range: {out.dist.sum()}')
+print(f'Clean chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
+
+
+## Reduce the Induced Power Factor
+## Increase the fuel efficiency of the engine
+eng_fac = 0.97
+
+# Use this k_i when calling Helicopter.hover()
+k_i = 1.05
+
+efficient_chopper = copy.copy(doc_chopper)
+efficient_chopper.bsfc_0 = eng_fac*efficient_chopper.bsfc_0
+efficient_chopper.bsfc_1 = eng_fac*efficient_chopper.bsfc_1
+efficient_chopper.bsfc_2 = eng_fac*efficient_chopper.bsfc_2
+efficient_chopper.bsfc_3 = eng_fac*efficient_chopper.bsfc_3
+efficient_chopper.bsfc_4 = eng_fac*efficient_chopper.bsfc_4
+efficient_chopper.bsfc_5 = eng_fac*efficient_chopper.bsfc_5

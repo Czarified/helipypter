@@ -350,9 +350,7 @@ weight from the total fuel weight, and logging the results.
     
     mission_loop(doc_chopper, mission)
 
-Results:
-
-.. code-block:: 
+Results::
 
     2020-05-02 21:16:07,914 -  INFO -  -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
     2020-05-02 21:16:07,914 -  INFO -              Project Spec Mission             
