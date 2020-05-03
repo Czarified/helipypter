@@ -27,6 +27,7 @@ Glauert's Model is used.
    :maxdepth: 2
    :caption: Contents:
    
+   installation
    analysis
    theory
    api
