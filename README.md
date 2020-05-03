@@ -9,8 +9,9 @@ heliPypter has an object oriented philosophy, so different rotorcraft configurat
 and evaluated quickly, with the same methods. The classes have methods for Hover in and out of Ground Effect
 (HOGE and HIGE), as well as forward flight.
 
-Under the hood, briefly speaking, the code applies Momentum Theory assuming constant chord ideal twist. 
-For forward flight, Glauert's Model is used.
+Under the hood, briefly speaking, the code applies Momentum Theory assuming constant chord ideal twist.
+Correction factors can be supplied to align results with tapered, linearly twisted blades. For forward flight, 
+Glauert's Model is used.
 
 ## Installation:
 
@@ -32,5 +33,7 @@ All donations will be used as developer fuel!
 
 
 #### Attributions
+
 Huey Graphic by Jetijones - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=15743299
+
 Blade Element graphic by Smilesgiles89 - MS Paint, CC BY-SA 3.0, https://en.wikipedia.org/w/index.php?curid=38336902
