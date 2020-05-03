@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import helipypter.vehicles as vh
    
 # Empty weight fraction
@@ -43,3 +45,12 @@ print('{:^45}'.format('Results - HOGE'))
 print('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-')
 for k,v in doc_chopper.HOGE(atm).items():
     print('{:>17}:  {:>7.4}'.format(k, v))
+
+
+speeds = list(np.linspace(20, 150, num=28))
+data = doc_chopper.forward_flight(atm, speeds)
+
+ax = data.plot(x='SHP_uninst', y='bsfc')
+fig = plt.figure()
+fig.axes.append(ax)
+fig.savefig('bsfc_fig.png')
