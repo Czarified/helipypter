@@ -516,3 +516,7 @@ the the mission should design the vehicle and not vice versa), but the remaining
     Clean chopper remaining fuel: 42.34
     Efficient chopper range: 340.0
     Efficient chopper remaining fuel: 57.55
+
+
+We can see from the above that our design is very sensitive to weight and fuel efficiency. Improvements in these areas
+would be more effective uses of future design resources than in cleaner aerodynamics.
