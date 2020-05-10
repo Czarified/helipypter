@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="heliPypter",
-    version="0.0.6",
+    version="0.0.7",
     author="Benjamin Crews",
     author_email="aceF22@gmail.com",
     description="A package for rotorcraft performance evaluation.",

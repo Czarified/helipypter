@@ -100,6 +100,9 @@ class Helicopter():
         self.TR_A = math.pi * self.TR_R**2
         self.TR_vtip = self.TR_Omega * self.TR_R
         self.TR_sol = self.TR_b*self.TR_ce/(12*math.pi*self.TR_R)
+
+        self._fuel_cap = self.GW_fuel
+        self._payload_cap = self.GW_payload
         
     
     def __str__(self) -> str:
@@ -181,6 +184,20 @@ class Helicopter():
             raise ValueError('More unload payload requested than remaining!')
         else:
             self.GW_payload -= weight
+
+
+    def reload(self):
+        '''
+        This method reloads the payload to capacity. Capacity is defined upon vehicle creation.
+        '''
+        self.GW_payload = self._payload_cap
+
+
+    def refuel(self):
+        '''
+        This method refuels to the fuel capacity. Capacity is defined upon vehicle creation.
+        '''
+        self.GW_fuel = self._fuel_cap
     
     
     def idle(self, pwr: float = 20):

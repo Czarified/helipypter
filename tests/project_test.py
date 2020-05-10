@@ -65,8 +65,10 @@ for k,v in heli.HIGE(atm).items():
 
 
 ## Forward flight performance over the speed sweep
-speeds = list(np.linspace(20, 150, num=28))
+speeds = list(np.linspace(20, 150, num=27))
 data = heli.forward_flight(atm, speeds)
+
+data.to_excel('SpeedSweep.xlsx')
 
 ## Uncomment this section to print all the data to console
 ## It's just a dataframe, so it can be printed, stored,

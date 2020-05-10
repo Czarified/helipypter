@@ -427,7 +427,7 @@ it's really up to you.
 
     ## Reduce the empty weight fraction
     EW_factor = 0.95
-    
+
     # Empty weight fraction
     EW_frac = 0.528
     # Total Gross Weight
@@ -442,28 +442,39 @@ it's really up to you.
     w_payload = 6*213
     w_fuel = GW_total - w_empty - w_payload
 
-    # Copy the previous vehicle, and modify the weights
-    lightweight = copy.copy(doc_chopper)
-    lightweight.GW_empty = w_empty
-    lightweight.GW_fuel = w_fuel
+    lite_args = copy.copy(args)
+    lite_args[11] = w_empty
+    lite_args[12] = w_fuel
+    lite_args[13] = w_payload 
 
-    
+    # Generate the new vehicle, with all other characteristics the same
+    lightweight = chopper_gen(lite_args)
+    out = pd.DataFrame(data=func.missionSim(lightweight, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+    print(f'Lite chopper range: {out.dist.sum()}')
+    print(f'Lite chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
+
     ## Reduce the MR_cd0
     ## Reduce the fe
-    
     cd0_factor = 0.95
     fe_factor = 0.95
 
-    clean_chopper = copy.copy(doc_chopper)
-    clean_chopper.MR_cd0 = cd0_factor*clean_chopper.MR_cd0
-    clean_chopper.fe = fe_factor*clean_chopper.fe
+    clean_args = copy.copy(args)
+    clean_args[5] = cd0_factor*clean_args[5]
+    clean_args[15] = fe_factor*clean_args[15]
 
-    
-    
+    clean_chopper = chopper_gen(clean_args)
+
+    out = pd.DataFrame(data=func.missionSim(clean_chopper, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+    print(f'Clean chopper range: {out.dist.sum()}')
+    print(f'Clean chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
+
+
     ## Reduce the Induced Power Factor
     ## Increase the fuel efficiency of the engine
     eng_fac = 0.97
-    
+
     # Use this k_i when calling Helicopter.hover()
     k_i = 1.05
 
@@ -475,9 +486,33 @@ it's really up to you.
     efficient_chopper.bsfc_4 = eng_fac*efficient_chopper.bsfc_4
     efficient_chopper.bsfc_5 = eng_fac*efficient_chopper.bsfc_5
 
+    # Since this one is a copy of the old one
+    # We've already burned all the fuel and unloaded
+    # it, so we need to reset the weight values.
+    efficient_chopper.refuel()
+    efficient_chopper.reload()
+
+    out = pd.DataFrame(data=func.missionSim(efficient_chopper, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+    print(f'Efficient chopper range: {out.dist.sum()}')
+    print(f'Efficient chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
 
 From here, we can evaluate each verion on the same set of missions, and observe the change 
 in fuel consumption. Changes to the base class aren't limited to the above. A formulaic 
 optimization procedure could be performed on any number of variables for design optimization. 
 Programming this operation is beyond the scope of this analysis, however, and may be included 
 at a later date.
+
+Let's just look at the code output. The mission range was constant (although you could change it, but I would argue
+the the mission should design the vehicle and not vice versa), but the remaining fuel changes with each iteration.
+
+.. code-block:: python
+
+    Default chopper range: 340.0
+    Default chopper remaining fuel: 32.84
+    Lite chopper range: 340.0
+    Lite chopper remaining fuel: 164.84
+    Clean chopper range: 340.0
+    Clean chopper remaining fuel: 42.34
+    Efficient chopper range: 340.0
+    Efficient chopper remaining fuel: 57.55

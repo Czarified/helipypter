@@ -10,8 +10,34 @@ import matplotlib.ticker as ticker
 import helipypter.vehicles as vh
 import helipypter.funcs as func
 
-
-
+# Function to use later on
+def chopper_gen(args) -> vh.Helicopter:
+    '''
+    This function generates a helicopter class based on input arguments.
+    It's just a short way to use all the same arguments.
+    '''
+    chopper = vh.Helicopter(name = args[0] ,
+                            MR_dia = args[1] ,
+                            MR_b = args[2] ,
+                            MR_ce = args[3] ,
+                            MR_Omega = args[4] ,
+                            MR_cd0 = args[5] ,
+                            TR_dia = args[6] ,
+                            TR_b = args[7] ,
+                            TR_ce = args[8] ,
+                            TR_Omega = args[9] ,
+                            TR_cd0 = args[10],
+                            GW_empty = args[11],
+                            GW_fuel = args[12],
+                            GW_payload = args[13],
+                            download = args[14],
+                            fe = args[15],
+                            l_tail = args[16],
+                            S_vt = args[17],
+                            cl_vt = args[18],
+                            AR_vt = args[19]
+                            )
+    return chopper
 
 
 # Empty weight fraction
@@ -28,27 +54,12 @@ w_empty = EW_frac*GW_total + w_crew + w_fluids
 w_payload = 6*213
 w_fuel = GW_total - w_empty - w_payload
 
-doc_chopper = vh.Helicopter(name='Documentation Helicopter Spec',
-                MR_dia = 35,
-                MR_b = 4,
-                MR_ce = 10.4,
-            MR_Omega = 43.2,
-                MR_cd0 = 0.0080,
-                TR_dia = 5.42,
-                TR_b = 4,
-                TR_ce = 7,
-            TR_Omega = 239.85,
-                TR_cd0 = 0.015,
-            GW_empty = w_empty,
-                GW_fuel = w_fuel,
-            GW_payload = w_payload,
-            download = 0.03,
-                    fe = 12.9,
-                l_tail = 21.21,
-                S_vt = 20.92,
-                cl_vt = 0.22,
-                AR_vt = 3
-                    )
+args = ['Documentation Helicopter Spec', 35, 4, 10.4, 43.2, 0.0080,
+        5.42, 4, 7, 239.85, 0.015, w_empty, w_fuel,  w_payload,
+        0.03, 12.9, 21.21, 20.92, 0.22, 3
+]
+
+doc_chopper = chopper_gen(args)
 
 atm = vh.Environment(0)
 output = doc_chopper.HOGE(atm)
@@ -131,30 +142,29 @@ w_empty = EW_factor*EW_frac*GW_total + w_crew + w_fluids
 w_payload = 6*213
 w_fuel = GW_total - w_empty - w_payload
 
-# Copy the previous vehicle, and modify the weights
-lightweight = copy.copy(doc_chopper)
-lightweight.GW_empty = w_empty
-lightweight.GW_fuel = w_fuel
-lightweight.GW_payload = w_payload
+lite_args = copy.copy(args)
+lite_args[11] = w_empty
+lite_args[12] = w_fuel
+lite_args[13] = w_payload 
+
+# Generate the new vehicle, with all other characteristics the same
+lightweight = chopper_gen(lite_args)
 out = pd.DataFrame(data=func.missionSim(lightweight, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+print(f'Lite chopper range: {out.dist.sum()}')
+print(f'Lite chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
+
 
 ## Reduce the MR_cd0
 ## Reduce the fe
-
 cd0_factor = 0.95
 fe_factor = 0.95
 
+clean_args = copy.copy(args)
+clean_args[5] = cd0_factor*clean_args[5]
+clean_args[15] = fe_factor*clean_args[15]
 
-clean_chopper = copy.copy(doc_chopper)
-# GW Reset
-w_empty = EW_frac*GW_total + w_crew + w_fluids
-# Our payload is 6 people @ 213 lbs each
-w_payload = 6*213
-w_fuel = GW_total - w_empty - w_payload
-clean_chopper.GW_fuel = w_fuel
-clean_chopper.GW_payload = w_payload
-clean_chopper.MR_cd0 = cd0_factor*clean_chopper.MR_cd0
-clean_chopper.fe = fe_factor*clean_chopper.fe
+clean_chopper = chopper_gen(clean_args)
+
 out = pd.DataFrame(data=func.missionSim(clean_chopper, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
 print(f'Clean chopper range: {out.dist.sum()}')
 print(f'Clean chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
@@ -175,3 +185,13 @@ efficient_chopper.bsfc_2 = eng_fac*efficient_chopper.bsfc_2
 efficient_chopper.bsfc_3 = eng_fac*efficient_chopper.bsfc_3
 efficient_chopper.bsfc_4 = eng_fac*efficient_chopper.bsfc_4
 efficient_chopper.bsfc_5 = eng_fac*efficient_chopper.bsfc_5
+
+# Since this one is a copy of the old one
+# We've already burned all the fuel and unloaded
+# it, so we need to reset the weight values.
+efficient_chopper.refuel()
+efficient_chopper.reload()
+
+out = pd.DataFrame(data=func.missionSim(efficient_chopper, mission), columns=['dist', 'fuel_rem', 'fuel_used'])
+print(f'Efficient chopper range: {out.dist.sum()}')
+print(f'Efficient chopper remaining fuel: {out.fuel_rem.iat[-1]:.2f}')
