@@ -27,7 +27,7 @@ author = 'Benjamin Crews'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.0.6'
+release = '0.0.7'
 
 
 # -- General configuration ---------------------------------------------------
